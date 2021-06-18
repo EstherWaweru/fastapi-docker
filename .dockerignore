@@ -1,0 +1,8 @@
+.env
+.dockerignore
+Dockerfile
+DockerFile
+docker-compose.yaml
+app.py
+
+

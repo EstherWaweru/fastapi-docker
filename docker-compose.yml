@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:   
+    web:
+        build:
+            context: .
+        # command: |
+        #     bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8000'
+        # entrypoint: ["./wait.sh"]
+        command: uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+        
+        ports:
+            - 8000:8000
+        
+        volumes:
+            - ./:/api
+        environment:
+           - DATABASE_URL=postgres://root:hello_fastapi@db:5432/fastapi_demo
+        depends_on:
+            - db
+
+    db:
+        build:
+            context: ./db
+            dockerfile: Dockerfile
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        expose:
+            - 5432
+        environment:
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=hello_fastapi
+            - POSTGRES_DB=fastapi_demo
+
+volumes:
+    postgres_data:
+
